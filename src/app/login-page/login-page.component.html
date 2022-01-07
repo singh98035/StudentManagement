@@ -1,0 +1,59 @@
+<div class="container-fluid vh-100 px-0">
+    <div class="row w-100 m-0 py-3 bg-dark text-white">
+        <div class="col">
+            <div class="d-flex flex-column justify-content-center align-items-center">
+                <h4 class="m-0 mb-2 ">Student Management System</h4>
+            </div>
+        </div>
+    </div>
+    <div class="row w-100 m-0 mt-4 mr-3">
+        <div class="col d-flex justify-content-center  align-items-center">
+
+            <div class="card border shadow-sm w-25">
+                <div class="card-header bg-dark text-white border-0">
+                    <h5 class="text-center">Login Details</h5>
+                </div>
+                <div class="card-body align-items-center">
+                    <form [formGroup]="loginform" (ngSubmit)="onSubmit()">
+                        <div class="row">
+                            <div class="form-group col-12">
+                                <label for="email" class="text-sm text-muted">Enter Email</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text material-icons bg-white">
+                                            email
+                                        </span>
+                                    </div>
+                                    <input type="email" name="email" formControlName="email" class="form-control"
+                                        placeholder="eg: john@example.in">
+                                </div>
+                            </div>
+                            <div class="form-group col-12">
+                                <label for="password" class="text-sm text-muted">Enter Pasword</label>
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <span class="input-group-text material-icons bg-white">
+                                            password
+                                        </span>
+                                    </div>
+                                    <input type="password" name="password" formControlName="password"
+                                        class="form-control" placeholder="eg: *********">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row" style="margin-top: 1.4rem;">
+                            <div class="col">
+                                <div class="d-flex justify-content-center ">
+                                    <button type="submit" class="btn btn-dark">
+                                        Login
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+

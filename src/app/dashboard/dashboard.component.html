@@ -1,0 +1,225 @@
+<div class="container-fluid vh-100 px-0">
+  <div class="row w-100 m-0 py-3 bg-dark text-white">
+    <div class="col">
+      <div class="d-flex justify-content-between">
+        <h4 class="m-0 mb-2">Student Management System</h4>
+        <button type="button" class="btn btn-light rounded-pill" (click)="db.logoutUser()">Logout</button>
+      </div>
+    </div>
+  </div>
+  <div class="row w-100 m-0 mt-2">
+    <div class="col">
+      <div class="card bg-transparent border-0">
+        <div class="card-header bg-white" style="border: 1px solid #eee;">
+          <div class="row">
+            <span class="font-weight-bold text-left" style="font-size: 2rem;">Students</span>
+            <div class="col-12 col-sm-6"></div>
+            <div class="col-12 col-sm">
+              <div class="d-flex justify-content-end">
+                <input type="text" class="form-control col-6 mr-3" name="name" id="name" (keyup)="filterData($event)" placeholder="Search">
+                <button class="btn btn-primary rounded-pill " (click)="openStudentModal(studentModal)">
+                  Add Students
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="table-responsive">
+          <table class="table table-flush text-center">
+            <thead class="thead-light">
+              <tr>
+                <th>Sr. No</th>
+                <th>Student Name</th>
+                <th>Father Name</th>
+                <!-- <th>Course Reviewer / Dept.</th> -->
+                <th>Mother Name</th>
+                <th>Age</th>
+                <th>Home Address</th>
+                <th>City</th>
+                <th>Registration Date</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let std of studentsList; index as idx">
+                <td>{{ idx + 1 }}</td>
+                <td>
+                  <div class="d-flex flex-column">
+                    <span>{{ std['name'] }}</span>
+                     </div>
+                </td>
+                <td>
+                  <div class="d-flex flex-column">
+                    <span>{{ std['fatherName'] }}</span>
+                    </div>
+                </td>
+                <td>
+                  <div class="d-flex flex-column">
+                    <span>{{ std['motherName']  }}</span>
+                  </div>
+                </td>
+               
+                <td>
+                  <div class="d-flex flex-column">
+                    <span>{{ std['age'] || (idx+1) * 2}}</span>
+                    </div>
+                </td>
+                <td>
+                  <div class="d-flex flex-column">
+                    <span>{{ std['homeAddress']['address'] }}</span>
+                   </div>
+                </td>
+                <td>
+                  <div class="d-flex flex-column">
+                    <span>{{ std['homeAddress']['city'] }}</span>
+                   </div>
+                </td>
+                <td> <span class="font-weight-bold">{{ std['registrationDate'].toDate() | date:'dd-MM-yyyy, hh:mm:ss a' }}</span></td>
+                <td>
+                  <button type="button" class="btn btn-sm btn-dark rounded-pill mr-2 " (click)="openStudentModal(studentModal, std)">
+                    Update Student
+                  </button>
+                  <button type="button" class="btn btn-sm btn-danger rounded-pill " (click)="deleteStudentRecord(std['studentId'])">
+                    Delete Student
+                  </button>
+                 </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <!-- <div class="row mt-2">
+          <div class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4" *ngFor="let std of studentsList; index as idx">
+            <div class="card">
+              <div class="card-header bg-white border-0">
+                <h5 class="card-title d-flex justify-content-between align-items-center">
+                  <span>{{ std['name'] }}</span>
+                  <span class="badge badge-primary badge-pill">{{ std['age'] || (idx+1) * 2 }}</span>
+                </h5>
+              </div>
+              <div class="card-body">
+                <p class="card-text d-flex flex-column">
+                  <span class="text-muted text-sm">Father Name </span>
+                  <span class="font-weight-bold">{{ std['fatherName'] || 'Not Provided' }}</span>
+                </p>
+                <p class="card-text d-flex flex-column">
+                  <span class="text-muted text-sm">Mother Name </span>
+                  <span class="font-weight-bold">{{ std['motherName'] || 'Not Provided' }}</span>
+                </p>
+                <p class="card-text d-flex flex-column">
+                  <span class="text-muted text-sm">Address </span>
+                  <span class="font-weight-bold">{{ std['homeAddress']['address'] || 'Not Provided' }}</span>
+                </p>
+                <p class="card-text d-flex flex-column">
+                  <span class="text-muted text-sm">City </span>
+                  <span class="font-weight-bold">{{ std['homeAddress']['city'] || 'Not Provided' }}</span>
+                </p>
+                <p class="card-text d-flex flex-column">
+                  <span class="text-muted text-sm">Registered On: </span>
+                  <span class="font-weight-bold">{{ std['registrationDate'].toDate() | date:'dd-MM-yyyy, hh:mm:ss a' }}</span>
+                </p>
+              </div>
+              <div class="card-footer">
+                <div class="d-flex justify-content-evenly align-items-center">
+                  <button type="button" class="btn btn-sm btn-dark rounded-pill mr-2 w-100" (click)="openStudentModal(studentModal, std)">
+                    Update Student
+                  </button>
+                  <button type="button" class="btn btn-sm btn-danger rounded-pill w-100" (click)="deleteStudentRecord(std['studentId'])">
+                    Delete Student
+                  </button>
+                  
+                </div>
+              </div>
+            </div>
+          </div>
+        </div> -->
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<ng-template let-modal #studentModal>
+  <div class="modal-header border-0">
+    <div class="row w-100 m-0">
+      <div class="col">
+        <div class="d-flex justify-content-between align-items-center">
+          <h4>{{ studentUpdateBool ? 'Update' : 'Add' }} Students</h4>
+          <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('')">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <form [formGroup]="studentForm" (ngSubmit)="submitForm()">
+    <div class="modal-body">
+      <h6 class="heading-small text-muted mb-2">User information</h6>
+          <div>
+            <div class="row">
+              <div class="col-lg-6">
+                <div class="form-group">
+                  <label class="form-control-label" for="input-username">Name</label>
+                  <input type="text" id="input-username" class="form-control form-control-alternative" placeholder="eg: John Peterson" formControlName="name">
+                </div>
+              </div>
+              <div class="col-lg-6">
+                <div class="form-group">
+                  <label class="form-control-label" for="input-email">age</label>
+                  <input type="number" id="input-email" class="form-control form-control-alternative" placeholder="**" formControlName="age">
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-lg-6">
+                <div class="form-group">
+                  <label class="form-control-label" for="input-first-name">Father name</label>
+                  <input type="text" id="input-first-name" class="form-control form-control-alternative" placeholder="Father name" formControlName="fatherName">
+                </div>
+              </div>
+              <div class="col-lg-6">
+                <div class="form-group">
+                  <label class="form-control-label" for="input-last-name">Mother name</label>
+                  <input type="text" id="input-last-name" class="form-control form-control-alternative" placeholder="Mother name" formControlName="motherName">
+                </div>
+              </div>
+            </div>
+          </div>
+          <hr class="my-2" />
+      <!-- Address -->
+      <h6 class="heading-small text-muted mb-2">Contact information</h6>
+      <div formGroupName="homeAddress">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="form-group">
+              <label class="form-control-label" for="input-address">Address</label>
+              <input id="input-address" class="form-control form-control-alternative" placeholder="Home Address" formControlName="address" type="text">
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-lg-4">
+            <div class="form-group">
+              <label class="form-control-label" for="input-city">City</label>
+              <input type="text" id="input-city" class="form-control form-control-alternative" placeholder="City" formControlName="city">
+            </div>
+          </div>
+          <div class="col-lg-4">
+            <div class="form-group">
+              <label class="form-control-label" for="input-country">State</label>
+              <input type="text" id="input-country" class="form-control form-control-alternative" placeholder="State" formControlName="state">
+            </div>
+          </div>
+          <div class="col-lg-4">
+            <div class="form-group">
+              <label class="form-control-label" for="input-country">Country</label>
+              <input type="text" id="input-postal-code" class="form-control form-control-alternative" placeholder="Country" formControlName="country">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-footer">
+      <button type="submit" class="btn btn-sm btn-dark rounded-pill">Submit</button>
+    </div>
+  </form>
+</ng-template>
